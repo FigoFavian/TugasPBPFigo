@@ -8,4 +8,4 @@ def app_info(request):
         'nama': 'Figo Favian Ragazo',  # nama
         'kelas': 'PBP F'  # kelas 
     }
-    return render(request, 'main/main.html', context)
+    return render(request, 'main.html', context)
