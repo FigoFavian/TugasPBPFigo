@@ -1,9 +1,10 @@
 # main/urls.py
 from django.urls import path
-from . import views
+from main.views import ingfo 
+
+app_name = 'main'
 
 urlpatterns = [
     # bisa menambahkan URL utk views
-    path('', views.app_info, name='home'),
-    path('app-info/', views.app_info, name='app_info'),
+    path('', ingfo, name='main')
 ]
