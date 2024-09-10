@@ -84,10 +84,35 @@ urlpatterns = [
    - push repository lokal ke PWS 
 
 
+### Bagan 
 
+Visualisasi:
+![image](https://github.com/user-attachments/assets/2f8c7cf5-e6a5-4ef3-a54c-3a313b13330b)
+[Source Img](https://nitinnain.com/djangos-request-response-cycle/)
 
+Client Request 
+      |
+      v
+   urls.py -- Cek pola URL dan route ke view yang sesuai --> views.py
+      |                                                    |
+      |                                                    v
+      |                 Interaksi dengan models.py untuk mengambil  data jika diperlukan
+      v                                  
+  models.py -- Kirim data yang diambil dari database ke views.py
+      |
+      v
+HTML Template -- Render data menjadi halaman HTML
+      |
+      v
+Client Response -- Kirim halaman HTML ke client
 
+> Penjelasan Hubungan Komponen:
+`urls.py`: Bertugas mencocokkan URL yang dikirimkan klien dengan view yang sesuai. Misalnya, jika klien mengirimkan request ke /home/, urls.py akan memetakan request tersebut ke view yang menangani halaman home.
 
+`views.py`: Bertanggung jawab untuk menangani logika dari request, termasuk pengambilan data dari model dan menyiapkan data untuk template. Jika data dari database diperlukan, `views.py` akan memanggil `models.py`
 
+`models.py`: Berisi definisi model dan struktur data. Menggunakan Django ORM, model mengatur interaksi dengan database. Misalnya, jika sebuah view memerlukan daftar item dari database, `models.py` akan menyediakan akses ke data tersebut.
 
-  
+`HTML Template`: Setelah data dikumpulkan di view, template digunakan untuk merender data tersebut menjadi halaman web yang akan ditampilkan kepada klien.
+
+`Client Response`: Setelah halaman HTML selesai dirender, Django akan mengembalikannya sebagai respons HTTP ke klien, yang kemudian akan ditampilkan di browser atau perangkat lunak klien.
