@@ -87,7 +87,9 @@ urlpatterns = [
 ### Bagan 
 
 Visualisasi:
+
 ![image](https://github.com/user-attachments/assets/2f8c7cf5-e6a5-4ef3-a54c-3a313b13330b)
+
 [Source Img](https://nitinnain.com/djangos-request-response-cycle/)
 
 Client Request 
@@ -107,6 +109,7 @@ HTML Template -- Render data menjadi halaman HTML
 Client Response -- Kirim halaman HTML ke client
 
 > Penjelasan Hubungan Komponen:
+
 `urls.py`: Bertugas mencocokkan URL yang dikirimkan klien dengan view yang sesuai. Misalnya, jika klien mengirimkan request ke /home/, urls.py akan memetakan request tersebut ke view yang menangani halaman home.
 
 `views.py`: Bertanggung jawab untuk menangani logika dari request, termasuk pengambilan data dari model dan menyiapkan data untuk template. Jika data dari database diperlukan, `views.py` akan memanggil `models.py`
