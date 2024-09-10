@@ -6,7 +6,7 @@
 
 Website Tugas 2: [click here](http://figo-favian-pbptugas2figo.pbp.cs.ui.ac.id/)
 
-### Step-by-step:
+### 🟦🟥 Step-by-step:
 1. Membuat Proyek Django baru
   - Membuat folder, directory, dan repo baru
   - Di dalam folder, gunakan `python -m venv venv` untuk membbuat virtual environment yang baru kemudian jalankan
@@ -84,29 +84,13 @@ urlpatterns = [
    - push repository lokal ke PWS 
 
 
-### Bagan 
+### 🟦🟥 Bagan 
 
 Visualisasi:
 
 ![image](https://github.com/user-attachments/assets/2f8c7cf5-e6a5-4ef3-a54c-3a313b13330b)
 
 [Source Img](https://nitinnain.com/djangos-request-response-cycle/)
-
-Client Request 
-      |
-      v
-   urls.py -- Cek pola URL dan route ke view yang sesuai --> views.py
-      |                                                    |
-      |                                                    v
-      |                 Interaksi dengan models.py untuk mengambil  data jika diperlukan
-      v                                  
-  models.py -- Kirim data yang diambil dari database ke views.py
-      |
-      v
-HTML Template -- Render data menjadi halaman HTML
-      |
-      v
-Client Response -- Kirim halaman HTML ke client
 
 > Penjelasan Hubungan Komponen:
 
@@ -119,3 +103,12 @@ Client Response -- Kirim halaman HTML ke client
 `HTML Template`: Setelah data dikumpulkan di view, template digunakan untuk merender data tersebut menjadi halaman web yang akan ditampilkan kepada klien.
 
 `Client Response`: Setelah halaman HTML selesai dirender, Django akan mengembalikannya sebagai respons HTTP ke klien, yang kemudian akan ditampilkan di browser atau perangkat lunak klien.
+
+### 🟦🟥 Fungsi Git 
+Fungsi Git dalam pengembangan perangkat lunak: Git adalah alat kontrol versi yang memfasilitasi pelacakan perubahan kode secara efektif dan kolaboratif. Dengan fitur branching dan merging, Git memungkinkan pengembangan beberapa fitur secara paralel tanpa mengganggu kode utama. Git juga menyimpan riwayat perubahan, memungkinkan rollback jika terjadi kesalahan, dan menjaga integritas proyek. Integrasi dengan platform seperti GitHub mendukung kolaborasi tim secara online, menjadikan pengembangan perangkat lunak lebih terstruktur, aman, dan efisien.
+
+### 🟦🟥 Framework Django sebagai permulaan pembelajaran pengembangan perangkat lunak
+Mengapa Django dijadikan permulaan pembelajaran pengembangan perangkat lunak: Django dipilih sebagai langkah awal dalam belajar pengembangan perangkat lunak karena memiliki arsitektur yang jelas dan fitur bawaan yang kaya seperti autentikasi dan panel admin. Ini mengurangi beban teknis sehingga pemula bisa fokus pada logika aplikasi. Dokumentasinya yang lengkap, komunitas yang aktif, serta integrasi keamanan membuat Django sangat ramah bagi pemula dan memberikan pondasi yang kuat untuk pengembangan proyek yang lebih besar.
+
+### 🟦🟥 Model pada Django sebagai ORM
+Mengapa model pada Django disebut sebagai ORM (Object-Relational Mapping): Django menggunakan ORM untuk memetakan objek dalam kode Python ke tabel di basis data relasional. Dengan ORM, pengembang dapat berinteraksi dengan data menggunakan metode Python tanpa perlu menulis SQL langsung. Setiap class model merepresentasikan tabel, dan setiap atributnya adalah kolom dalam tabel, yang membuat pengelolaan dan manipulasi data lebih mudah dan intuitif.
