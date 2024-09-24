@@ -1,11 +1,43 @@
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Info</title>
-</head>
+{% extends 'base.html' %}
+{% block content %}
 <body>
     <h1>Etrean Luminant Store</h1>
     <p>Nama: {{ nama }}</p>
     <p>Kelas: {{ kelas }}</p>
-</body>
-</html>
+
+    {% if not product_entries %}
+    <p>Belum ada data product pada etrean luminant store</p>
+    {% else %}
+    <table>
+        <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Description</th>
+    </tr>
+
+  {% for prod_entry in product_entries %}
+  <tr>
+    <td>{{prod_entry.name}}</td>
+    <td>{{prod_entry.price}}</td>
+    <td>{{prod_entry.description}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<br />
+
+<a href="{% url 'main:create_product' %}">
+  <button>Add New Product</button>
+</a>
+
+<a href="{% url 'main:logout' %}">  
+  <button>Logout</button>
+</a>
+
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+
+{% endblock content %}
+
+
+
