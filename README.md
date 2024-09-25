@@ -1,10 +1,13 @@
-# Tugas 2 - PBP
+# Tugas PBP
 ## I'd like to welcome you to Etrean Luminant Store (¬‿¬)
 
 > [!NOTE]
 > A Model-View-Template for an E-Commerce application 
 
-Website Tugas 2: [click here](http://figo-favian-pbptugas2figo.pbp.cs.ui.ac.id/)
+Website Tugas: [click here](http://figo-favian-pbptugas2figo.pbp.cs.ui.ac.id/)
+
+<details>
+  <summary>Tugas 2</summary>
 
 ### 🟦🟥 Step-by-step:
 1. Membuat Proyek Django baru
@@ -112,8 +115,12 @@ Mengapa Django dijadikan permulaan pembelajaran pengembangan perangkat lunak: Dj
 
 ### 🟦🟥 Model pada Django sebagai ORM
 Mengapa model pada Django disebut sebagai ORM (Object-Relational Mapping): Django menggunakan ORM untuk memetakan objek dalam kode Python ke tabel di basis data relasional. Dengan ORM, pengembang dapat berinteraksi dengan data menggunakan metode Python tanpa perlu menulis SQL langsung. Setiap class model merepresentasikan tabel, dan setiap atributnya adalah kolom dalam tabel, yang membuat pengelolaan dan manipulasi data lebih mudah dan intuitif.
+</details>
 
-# Tugas 3 - PBP
+<details>
+  <summary>Tugas 3</summary>
+
+Tugas 3 - PBP
 
 ## QnA:
 ### 🟦🟥 Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
@@ -161,5 +168,207 @@ Maka id-nya berupa  "pk": "c7af16dd-0ded-4915-b104-cc0cf0b172d8"
 ![image](https://github.com/user-attachments/assets/bb742c2c-aad9-4279-985e-fc926c1e00f6)
 ![image](https://github.com/user-attachments/assets/343c602d-06f2-47c4-b92f-e4bca102a12d)
 
+</details>
+
+<details>
+  <summary>Tugas 4</summary>
+1.  Apa perbedaan antara HttpResponseRedirect() dan redirect()
+
+Secara umum, redirect() lebih fleksibel sebab HttpResponseRedirect() hanya hanya menerima URL sebagai argumen, redirect() mampu menerima model, view, atau URL dan menyederhanakan pengalihan dengan menyelesaikan URL menggunakan fungsi reverse() secara otomatis. 
+
+```python
+Contoh HttpResponseRedirect(): `return return HttpResponseRedirect('/main/')`
+Contoh redirect(): `return redirect('main:show_main')`
+```
+
+2. Jelaskan cara kerja penghubungan model Product dengan User!
+
+Penghubungan model Product dengan User dilakukan melalui `ForeignKey` yang menghasilkan relasi one-to-many. Relasi one-to-many memastikan bahwa setiap produk dimiliki oleh satu pengguna, namun pengguna tersebut bisa memiliki banyak produk. Dalam implementasi, produk yang dibuat oleh user akan secara otomatis terhubung dengan user yang sedang login menggunakan `request.user`. Jika pengguna dihapus, semua produk yang terkait juga akan ikut dihapus. Relasi ForeignKey menggunakan parameter on_delete=models.CASCADE, yang berarti bahwa jika pengguna (User) dihapus, maka semua produk yang terkait dengan pengguna tersebut juga akan ikut dihapus dari database. Ini membantu menjaga konsistensi data dan mencegah adanya produk yang "terputus" dari pengguna.
+Berikut contohnya:
+
+```python
+class Product(models.Model): 
+user = models.ForeignKey(User, on_delete=models.CASCADE) 
+Id models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+name = models.CharField(max_length=100) 
+price = models.IntegerField()
+description = models.TextField()  
+```
+
+3.  Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+
+Authentication adalah proses verifikasi identitas user. Tujuan dari autentikasi adalah memastikan bahwa pengguna benar-benar merupakan orang yang mereka klaim. Authorization adalah proses yang menentukan hak akses yang dimiliki pengguna setelah authentication berhasil. Authorization memastikan apakah pengguna memiliki izin untuk mengakses sumber daya atau melakukan tindakan tertentu. Saat proses login, Django akan mengautentikasi melalui username dan password seperti umumnya, jika berhasil maka kemudian user akan diotorisasi. Berikut merupakan contoh implementasi dalam django:
+
+```python
+def login_user(request): 
+
+if request.method == 'POST': 
+form = AuthenticationForm(data=request.POST)
+
+ if form.is_valid(): 
+user = form.get_user()
+login(request, user) 
+response = HttpResponseRedirect(reverse("main:ingfo")) 
+response.set_cookie('last_login', str(datetime.datetime.now())) 
+return response
+else:
+ form = AuthenticationForm(request) 
+context = {'form': form} 
+return render(request, 'login.html', context)
+```
+
+4.  Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+
+Django mengingat pengguna yang telah login dengan menggunakan sessions dan cookies. Saat user berhasil login, Django akan membuat session di server yang menyimpan informasi pengguna, seperti ID pengguna dan status autentikasi. Django kemudian mengirimkan session ID ke browser klien dalam bentuk cookie. Setiap kali pengguna melakukan request ke server, browser akan mengirim kembali cookie yang berisi session ID tersebut. Django kemudian membaca session ID tersebut, mencocokkannya dengan informasi sesi yang tersimpan di server, dan melanjutkan interaksi tanpa perlu pengguna login kembali.
+
+Cookies memiliki kegunaan lain seperti menyimpan preferensi pengguna(bahasa yang dipilih, tema tampilan),  menyimpan status login user, melacak aktifitas user di seluruh situs, dan lain lain. Django mengimplementasikan beberapa sistem keamanan kepada cookies seperti CSRF Protection, Secure Cookies, dan HttpOnly, sebab terdapat cookies yang tidak sepenuhnya aman. 
+
+5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+
+
+A. Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna untuk mengakses aplikasi sebelumnya dengan lancar.
+
+1) Mengimplementasikan fungsi register dalam `views.py` dengan method `register`
+
+```python
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
+```
+
+Penjelasan:
+> Membuat form pendaftaran melalui `UserCreateForm()` nya Django. Dengan menangani POST, Jika form sudah valid maka data akan disimpan. Kemudian setelah terdaftar, akan di redirect ke halaman login
+
+2) Mengimplementasikan fungsi login dalam `views.py` dengan method `login_user`
+
+```python
+def login_user(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:ingfo"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+
+    else:
+        form = AuthenticationForm(request)
+    context = {'form': form}
+    return render(request, 'login.html', context)
+```
+
+Penjelasan:
+> method ini menggunakan beberapa fungsi dari Django seperti AuthenticationForm untuk login, kemudian jika berhasil `HttpResponseRedirect` akan meredirect ke halaman utama.
+
+3) Mengimplementasikan fungsi  dalam `views.py` dengan method `logout_user`
+
+```python
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+```
+
+> Penjelasan:
+* logout() akan menghapus session user dan setelah itu cookie akan di delete
+
+4) Memetakan masing masing method ke dalam `urls.py`:
+
+```python
+urlpatterns = [
+    ...
+    path('register/', register, name='register'),
+    path('login/', login_user, name='login'),
+    path('logout/', logout_user, name='logout'),
+]
+```
+
+5) Menambahkan `@login_required(login_url='/login')` di `views.py` untuk pengguna yang ingin login.
+
+
+B. Membuat dua akun pengguna dengan masing-masing tiga dummy data menggunakan model yang telah dibuat pada aplikasi sebelumnya untuk setiap akun di lokal.
+
+1) Berikut dua akun pengguna yang diregister:
+
+
+2) Login kedua user dan tambahkan masing masing tiga dummy:
+
+
+
+
+C. Menghubungkan model Product dengan `User`
+
+Mengupdate method `Product` di `models.py`
+
+```python
+class Product(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100) 
+    price = models.IntegerField()  
+    description = models.TextField()  
+```
+
+
+> Penjelasan: Menambahkan field user dengan value `models.ForeignKey`. Penambahan ini akan menghubungkan User dengan Product dan akan berguna agar user dapat memiliki banyak Product. 
+
+
+D. Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama aplikasi.
+
+1) Membuat cookie dengan nama `last_login` berisi waktu dari user login saat user tersebut berhasil login
+
+```python
+def login_user(request):
+   if request.method == 'POST':
+      form = AuthenticationForm(data=request.POST)
+
+      if form.is_valid():
+        user = form.get_user()
+        login(request, user)
+        response = HttpResponseRedirect(reverse("main:ingfo"))
+        response.set_cookie('last_login', str(datetime.datetime.now()))
+        return response
+
+   else:
+      form = AuthenticationForm(request)
+   context = {'form': form}
+   return render(request, 'login.html', context)
+```
+
+2) Menampilkan username sesuai data dengan menggunakan `request.user.username`:
+
+```python
+@login_required(login_url='/login')
+def ingfo(request):
+    product_entries = Product.objects.filter(user=request.user)
+    
+    context = {
+        'nama': request.user.username,  # nama
+        'kelas': 'PBP F',  # kelas 
+        'product_entries': product_entries,
+        'last_login': request.COOKIES['last_login'],
+        }
+    
+    return render(request, 'main.html', context)
+```
+
+3) Username dan waktu login ditampilkan di `main.html` dengan format `{{ }} `
+```python
+<p>Nama: {{ nama }}</p>
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+ ```
+</details>  
 
 
