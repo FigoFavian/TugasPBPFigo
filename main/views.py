@@ -1,14 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from main.forms import ProductForm
 from main.models import Product
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm,  AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 @login_required(login_url='/login')
@@ -17,7 +16,8 @@ def ingfo(request):
     
     context = {
         'nama': request.user.username,  # nama
-        'kelas': 'PBP F',  # kelas 
+        'kelas': 'PBP F',  # kelas
+        'npm': '1234567890',  
         'product_entries': product_entries,
         'last_login': request.COOKIES['last_login'],
         }
@@ -30,9 +30,9 @@ def create_product(request):
     form = ProductForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        mood_entry = form.save(commit=False)
-        mood_entry.user = request.user
-        mood_entry.save()
+        product_entry = form.save(commit=False)
+        product_entry.user = request.user
+        product_entry.save()
         form.save()
         return redirect('main:ingfo')
 
@@ -89,5 +89,25 @@ def logout_user(request):
     response.delete_cookie('last_login')
     return response
 
+def edit_product(request, id):
+    product = Product.objects.get(pk=id)  # Retrieve the product based on its ID
 
+    # Bind the product instance to the form
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()  # Save the edited product
+        return HttpResponseRedirect(reverse('main:ingfo'))  # Redirect after saving
+    
+    context = {'form': form}
+    return render(request, "edit_product.html", context)  # Pass form to the template
+
+
+def delete_product(request, id):
+    # Get mood berdasarkan id
+    product = Product.objects.get(pk = id)
+    # Hapus mood
+    product.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:ingfo'))
 
