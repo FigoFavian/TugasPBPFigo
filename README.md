@@ -380,4 +380,164 @@ def ingfo(request):
  ```
 </details>  
 
+<details>
+  
+  <summary>Tugas 5</summary>
 
+## Tugas 5 💻
+
+### 🟦🟥 Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+
+1. Aturan !important
+Jika ada aturan CSS yang menggunakan !important, aturan ini akan memiliki prioritas tertinggi dan menimpa semua aturan lainnya, terlepas dari urutan selector atau sumbernya.
+html:
+```python
+<p id="text" class="text" style="color: blue;">Hello World</p>
+```
+css:
+```python
+p { color: red !important; }
+```
+
+2. Inline Styles
+Inline CSS adalah gaya yang diterapkan langsung pada elemen HTML melalui atribut style. Ini memiliki prioritas lebih tinggi daripada selector ID, class, atau elemen dalam stylesheet eksternal atau internal.
+Html:
+```html
+<p id="text" class="text" style="color: green;">Hello World</p>
+```
+Css:
+```css
+#text { color: yellow; }
+```
+
+3. Selector ID
+Selector yang menggunakan ID (#id) memiliki prioritas lebih tinggi daripada class, pseudo-class, atau selector elemen. Jika elemen memiliki aturan yang ditentukan oleh ID, maka gaya ini akan diterapkan.
+Html:
+```html
+<p id="text" class="text">Hello World</p>
+```
+Css:
+```css
+#text {
+	color: blue;
+}
+
+.text {
+	color: yellow;
+}
+```
+
+
+4. Classes, Pseudo-classes, dan Attribute Selectors
+Selector yang menggunakan class (.class), pseudo-class (:hover, :focus), atau attribute selector ([type="text"]) memiliki prioritas lebih tinggi daripada selector elemen (p, div), tetapi lebih rendah dari ID dan inline style.
+html:
+```html
+<p class="text">Hello World</p>
+```
+Css:
+```css
+.text {
+	color: red;
+}
+
+p {
+	color: yellow;
+}
+```
+
+5. Selector Elemen dan Pseudo-elemen
+Selector elemen (seperti p, div, h1) memiliki prioritas paling rendah dibandingkan selector lainnya, kecuali jika tidak ada aturan yang lebih spesifik.
+html:
+```html
+<p>Hello World</p>
+```
+Css:
+```css
+p { color: green; }
+```
+
+6. Urutan Definisi dalam Stylesheet
+Jika terdapat dua aturan dengan prioritas yang sama (misalnya, dua aturan elemen atau dua aturan class), maka aturan yang didefinisikan terakhir dalam stylesheet akan diterapkan.
+html
+```html
+<p>Hello World</p>
+```
+Css
+```css
+p { color: yellow; } p { color: blue; }
+```
+
+7. Urutan Sumber CSS
+Inline CSS: Memiliki prioritas tertinggi di antara sumber-sumber CSS lainnya karena diterapkan langsung di elemen HTML.
+Contoh: <div style="color: red;">Contoh</div>
+Internal CSS: Ditulis dalam tag <style> di dalam halaman HTML dan memiliki prioritas lebih rendah dari inline CSS, tetapi lebih tinggi dari external CSS.
+Html:
+<style> div { color: green; } </style>
+
+### 🟦🟥 Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design
+
+Responsive design adalah pendekatan dalam desain web yang memungkinkan tampilan sebuah situs atau aplikasi untuk beradaptasi dengan berbagai ukuran layar, seperti desktop, tablet, dan smartphone. Semakin banyak pengguna yang mengakses internet melalui perangkat mobile. Dengan menggunakan responsive design, situs web dapat memberikan pengalaman pengguna (UX) yang lebih baik di semua perangkat tanpa memerlukan versi terpisah untuk desktop dan mobile.
+Jika sebuah situs tidak responsif, pengguna perangkat mobile mungkin mengalami kesulitan, seperti elemen yang terlalu kecil, teks yang sulit dibaca, atau layout yang berantakan. Namun, situs dengan desain responsif akan menyesuaikan elemen seperti ukuran teks, gambar, dan tata letak sehingga tetap mudah diakses dan digunakan di layar yang lebih kecil.
+Responsive design juga penting untuk Search Engine Optimization), karena mesin pencari seperti Google memberikan peringkat lebih tinggi pada situs yang mobile-friendly, sehingga meningkatkan visibilitas situs tersebut dalam hasil pencarian.
+Contoh aplikasi yang sudah menerapkan responsive design adalah YouTube. Youtube menyesuaikan letak dan elemen-elemen agar dapat diakses dengan nyaman di desktop dan perangkat mobile. Sebaliknya, beberapa situs lama, termasuk situs pemerintahan atau sistem internal seperti SiakNG, mungkin belum menerapkan responsive design dengan baik. Saat diakses melalui perangkat mobile, tampilan situs-situs ini sering kali tidak proporsional, dengan elemen-elemen yang terlalu kecil atau rusak, sehingga pengguna perlu memperbesar layar untuk berinteraksi.
+
+### 🟦🟥 Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+
+Dalam CSS, margin, border, dan padding adalah bagian dari CSS Box Model, yang mengatur bagaimana ruang di sekitar elemen diatur. Berikut penjelasan perbedaan ketiganya serta cara mengimplementasikannya:
+1. Margin adalah jarak di luar elemen yang memisahkannya dari elemen lain. Margin tidak memiliki warna atau garis dan berfungsi untuk menciptakan ruang kosong di sekitar elemen. Misalnya, jika ingin menambahkan margin 30px di semua sisi elemen, bisa digunakan kode berikut:
+
+css:
+```css
+div { margin: 30px; }
+```
+
+2. Border adalah garis yang mengelilingi elemen, yang berada di antara margin dan padding. Border memiliki warna, ketebalan, dan gaya yang bisa diatur (misalnya solid, dashed, atau dotted). Setiap sisi border dapat dikustomisasi secara terpisah. Contoh implementasi border hitam dengan ketebalan 3px dan gaya solid adalah:
+Css
+```css
+div { border: 3px solid black; }
+```
+
+3. Padding adalah jarak di dalam elemen, antara isi elemen dengan border. Padding menciptakan ruang di dalam elemen, menjauhkan konten dari tepi border. Padding juga bersifat transparan dan dapat diatur secara individual untuk setiap sisi (atas, bawah, kiri, kanan). Berikut contoh menambahkan padding 30px di semua sisi elemen:
+Css:
+```css
+div { padding: 30px; }
+```
+### 🟦🟥 Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+
+Flexbox (Flexible Box Layout)
+Flexbox adalah model layout satu dimensi yang digunakan untuk menyusun elemen secara fleksibel baik dalam arah horizontal (baris) atau vertikal (kolom). Flexbox sangat berguna untuk mengatur tata letak yang lebih sederhana, di mana elemen-elemen perlu menyesuaikan ruang yang tersedia pada sumbu utama (main axis).
+
+Kegunaan Flexbox:
+Menyusun elemen dalam satu baris atau kolom secara rapi & membuat tata letak elemen secara responsif, di mana elemen bisa tumbuh atau menyusut sesuai dengan ruang yang tersedia.
+Contoh penggunaan Flexbox:
+css
+```css
+.container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+```
+
+Situasi penggunaan Flexbox:
+Menyusun elemen-elemen dalam navbar atau sidebar, menyusun galeri produk dalam satu baris, dan mengatur elemen-elemen dalam satu kolom secara vertikal pada layout mobile.
+
+Grid Layout
+Grid Layout adalah model layout dua dimensi yang memungkinkan pengaturan elemen secara fleksibel dalam baris dan kolom. Dengan grid, kita bisa mengatur tata letak halaman yang lebih kompleks dan terstruktur.
+Kegunaan Grid Layout:
+Menyusun elemen pada halaman dalam struktur baris dan kolom  sangat cocok untuk membuat layout yang lebih kompleks seperti dashboard, galeri, atau halaman utama dengan beberapa bagian.
+Contoh penggunaan Grid Layout:
+Css:
+```css
+.container {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	grid-gap: 30px;
+}
+```
+
+Situasi penggunaan Grid Layout:
+Membuat tata letak halaman web yang kompleks dengan bagian-bagian seperti header, sidebar, konten utama, dan footer, menyusun galeri gambar dalam beberapa baris dan kolom, membuat layout yang responsif dengan struktur grid yang dapat disesuaikan.
+
+</details>
