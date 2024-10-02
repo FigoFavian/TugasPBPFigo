@@ -90,17 +90,16 @@ def logout_user(request):
     return response
 
 def edit_product(request, id):
-    product = Product.objects.get(pk=id)  # Retrieve the product based on its ID
+    product = Product.objects.get(pk=id)  
 
-    # Bind the product instance to the form
     form = ProductForm(request.POST or None, instance=product)
 
     if form.is_valid() and request.method == "POST":
-        form.save()  # Save the edited product
-        return HttpResponseRedirect(reverse('main:ingfo'))  # Redirect after saving
+        form.save()  
+        return HttpResponseRedirect(reverse('main:ingfo'))  
     
     context = {'form': form}
-    return render(request, "edit_product.html", context)  # Pass form to the template
+    return render(request, "edit_product.html", context) 
 
 
 def delete_product(request, id):

@@ -9,7 +9,6 @@
           <p class="font-semibold text-lg mb-2 text-white">Price</p>
           <p class="text-white mb-2">${{ prod_entry.price }}</p>
 
-          <!-- Tombol Edit dan Delete di pojok kanan bawah tabel -->
           <div class="flex justify-end space-x-2 mt-4">
               <a href="{% url 'main:edit_product' prod_entry.pk %}" class="bg-[#424549] hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md">
                   Edit
