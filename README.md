@@ -578,9 +578,36 @@ Halaman Tambah Produk = Dengan tailwind, penempatan label dan input field lebih 
 
 ✅ Untuk setiap card product, buatlah dua buah button untuk mengedit dan menghapus product pada card tersebut!
 saya definisikan komponen HTML baru dalam direktori main/templates/components bernama card_product.html. Kemudian implementasikan kedua button untuk mengedit dan menghapus berupa link yang menuju halaman baru berupa form.
+```css
+<div class="relative break-inside-avoid">
+  <div class="relative top-5 bg-[#7289da] shadow-md rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-[#5a6bbd] transform rotate-1 hover:rotate-0 transition-transform duration-300">
+      <div class="bg-[#7289da] text-white p-4 rounded-t-lg border-b-2 border-[#5a6bbd]">
+          <h3 class="font-bold text-xl mb-2">{{ prod_entry.name }}</h3>
+      </div>
+      <div class="p-4">
+          <p class="font-semibold text-lg mb-2 text-white">Product Description</p>
+          <p class="text-white mb-2">{{ prod_entry.description }}</p>
+          <p class="font-semibold text-lg mb-2 text-white">Price</p>
+          <p class="text-white mb-2">${{ prod_entry.price }}</p>
+
+          <div class="flex justify-end space-x-2 mt-4">
+              <a href="{% url 'main:edit_product' prod_entry.pk %}" class="bg-[#424549] hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md">
+                  Edit
+              </a>
+              <a href="{% url 'main:delete_product' prod_entry.pk %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md">
+                  Delete
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+```
 
 ✅ Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
 saya membuat berkas baru bernama navbar.html dalam direktori templates. Implementasi tampilan responsive
 mengimplementasikan dropdown untuk ukuran layar kecil, seperti ukuran layar mobile.
+
+```html
 <div class="mobile-menu hidden md:hidden px-4 w-full md:max-w-full">
+```
 </details>
