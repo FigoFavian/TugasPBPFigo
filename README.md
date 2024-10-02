@@ -504,7 +504,8 @@ div { padding: 30px; }
 ```
 ### 🟦🟥 Jelaskan konsep flex box dan grid layout beserta kegunaannya!
 
-Flexbox (Flexible Box Layout)
+#### Flexbox (Flexible Box Layout)
+
 Flexbox adalah model layout satu dimensi yang digunakan untuk menyusun elemen secara fleksibel baik dalam arah horizontal (baris) atau vertikal (kolom). Flexbox sangat berguna untuk mengatur tata letak yang lebih sederhana, di mana elemen-elemen perlu menyesuaikan ruang yang tersedia pada sumbu utama (main axis).
 
 Kegunaan Flexbox:
@@ -523,7 +524,8 @@ css
 Situasi penggunaan Flexbox:
 Menyusun elemen-elemen dalam navbar atau sidebar, menyusun galeri produk dalam satu baris, dan mengatur elemen-elemen dalam satu kolom secara vertikal pada layout mobile.
 
-Grid Layout
+#### Grid Layout
+
 Grid Layout adalah model layout dua dimensi yang memungkinkan pengaturan elemen secara fleksibel dalam baris dan kolom. Dengan grid, kita bisa mengatur tata letak halaman yang lebih kompleks dan terstruktur.
 Kegunaan Grid Layout:
 Menyusun elemen pada halaman dalam struktur baris dan kolom  sangat cocok untuk membuat layout yang lebih kompleks seperti dashboard, galeri, atau halaman utama dengan beberapa bagian.
@@ -540,4 +542,45 @@ Css:
 Situasi penggunaan Grid Layout:
 Membuat tata letak halaman web yang kompleks dengan bagian-bagian seperti header, sidebar, konten utama, dan footer, menyusun galeri gambar dalam beberapa baris dan kolom, membuat layout yang responsif dengan struktur grid yang dapat disesuaikan.
 
+
+### 🟦🟥 Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+
+✅ Implementasikan fungsi untuk menghapus dan mengedit product.
+
+Pertama-tama, saya buat fungsi baru untuk menghapus dan mengedit produk bernama edit_product dan delete_product lalu dimapping di url dengan edit_product/<uuid:id> dan delete_product/<uuid:id>
+```python
+def edit_product(request, id):
+    product = Product.objects.get(pk=id)  
+
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()  
+        return HttpResponseRedirect(reverse('main:ingfo'))  
+    
+    context = {'form': form}
+    return render(request, "edit_product.html", context) 
+
+def delete_product(request, id):
+    # Get mood berdasarkan id
+    product = Product.objects.get(pk = id)
+    # Hapus mood
+    product.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:ingfo'))
+```
+
+✅ Kustomisasi halaman login, register, dan tambah product semenarik mungkin.
+Saya menggunakan Tailwind CSS, maka saya menambahkan tailwind kedalam aplikasi. Kemudian saya membuat tampilan untuk login halaman register, tambah product, dan edit product.
+Halaman Login = Form login dengan tampilan responsif dan menggunakan Tailwind untuk styling input field dan tombol submit.
+Halaman Register = Form pendaftaran dengan bantuan Tailwind membuat elemen form seperti input dan pesan error memiliki visibility lebih bagus.
+Halaman Tambah Produk = Dengan tailwind, penempatan label dan input field lebih konsisten.
+
+✅ Untuk setiap card product, buatlah dua buah button untuk mengedit dan menghapus product pada card tersebut!
+saya definisikan komponen HTML baru dalam direktori main/templates/components bernama card_product.html. Kemudian implementasikan kedua button untuk mengedit dan menghapus berupa link yang menuju halaman baru berupa form.
+
+✅ Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
+saya membuat berkas baru bernama navbar.html dalam direktori templates. Implementasi tampilan responsive
+mengimplementasikan dropdown untuk ukuran layar kecil, seperti ukuran layar mobile.
+<div class="mobile-menu hidden md:hidden px-4 w-full md:max-w-full">
 </details>
