@@ -17,7 +17,7 @@ def ingfo(request):
     context = {
         'nama': request.user.username,  # nama
         'kelas': 'PBP F',  # kelas
-        'npm': '1234567890',  
+        'npm': '230600000',  
         'product_entries': product_entries,
         'last_login': request.COOKIES['last_login'],
         }
