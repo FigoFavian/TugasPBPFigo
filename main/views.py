@@ -104,7 +104,6 @@ def edit_product(request, id):
     context = {'form': form}
     return render(request, "edit_product.html", context) 
 
-
 def delete_product(request, id):
     # Get mood berdasarkan id
     product = Product.objects.get(pk = id)
@@ -117,8 +116,8 @@ def delete_product(request, id):
 @require_POST
 def add_product_entry_ajax(request):
     name = strip_tags(request.POST.get("name"))
-    price = strip_tags(request.POST.get("price"))
-    description = request.POST.get("description")
+    price = request.POST.get("price") # price tidak dibersihkan dengan strip_tags karena field tersebut berupa IntegerField
+    description = strip_tags(request.POST.get("description"))
     user = request.user
 
     new_product = Product(

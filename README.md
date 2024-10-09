@@ -611,3 +611,218 @@ mengimplementasikan dropdown untuk ukuran layar kecil, seperti ukuran layar mobi
 <div class="mobile-menu hidden md:hidden px-4 w-full md:max-w-full">
 ```
 </details>
+
+<details>
+  <summary>Tugas 6</summary>
+
+## Tugas 6
+
+### 🟦🟥 Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+  
+JavaScript memiliki banyak sekali manfaat. Manfaat utamanya dapat berupa operasi asynchronus, mengubah Document Object Model, membuat web lebih responsif dan dinamis, dll.
+
+Sebagai Contoh:
+Kedinamisan dalam kode saya terdapat pada main.html JavaScript digunakan untuk menangani pembukaan dan penutupan modal (showModal() dan hideModal()), serta untuk menangani pengiriman data secara asynchronus (addProductEntry()). Contoh selanjutnya untuk mengubah Document Object Model berupa fungsi refreshProductEntries() menggunakan JavaScript untuk memperbarui konten dalam elemen dengan ID product_entry_cards berdasarkan data dari server.
+
+### 🟦🟥 Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+
+fetch() adalah metode untuk melakukan permintaan HTTP asynchronus ke server. Seperti fetch, Await digunakan untuk menunggu hasil dari operasi asynchronus. Penggunaan await dan fetch() membuat penulisan kode asynchronus menjadi lebih mudah dibaca dan terstruktur.
+
+tanpa await:
+async function getProductEntries() {
+  return fetch("{% url 'main:show_json' %}").then((res) => res.json());
+}
+
+tanpa await eksekusi kode selanjutnya akan berjalan sebelum data diambil dari server. Akibatnya akan menyebabkan error atau data tidak valid.
+
+Maka dengan await:
+async function getProductEntries() {
+  const response = await fetch("{% url 'main:show_json' %}");
+  return response.json();
+}
+
+### 🟦🟥 Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?
+
+Cross-Site Request Forgery adalah serangan yang memaksa pengguna yang sudah authenticate untuk mengirimkan permintaan yang tidak diinginkan ke aplikasi web. Django tersendiri memiliki pertahanan untuk mencegah hal tersebut. Dengan menggunakan @csrf_exempt digunakan untuk menonaktifkan proteksi CSRF, hal ini berguna saat menggunakan API atau AJAX POST tanpa mengirim token CSRF.
+
+@csrf_exept ditaruh diatas fungsi add_product_entry_ajax:
+```python
+@csrf_exempt
+@require_POST
+def add_product_entry_ajax(request):
+```
+
+### 🟦🟥 Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+
+Pembersihan data input pengguna dilakukan di backend karena keamanan yang lebih kuat sebab data yang dikirim dari frontend dapat lebih mudah dimanipulasi oleh pengguna. Dengan pembersihan di backend, semua data yang diterima telah dibersihkan dari serangan seperti Cross-Site Scripting (XSS), walaupun frontend sudah diubah.
+Dengan ini, saya menggunakan  fungsi strip_tags yang diimport dari django.
+Sebagai contoh:
+
+```python
+def add_product_entry_ajax(request):
+    name = strip_tags(request.POST.get("name"))
+    description = strip_tags(request.POST.get("description"))
+    # ...
+```
+
+dan
+
+```python
+def clean_product(self):
+        product = self.cleaned_data["name"]
+        return strip_tags(product)
+    
+    def clean_description(self):
+        description = self.cleaned_data["description"]
+        return strip_tags(description)
+```
+
+### 🟦🟥 Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+
+✅Mengubah tugas 5 yang telah dibuat sebelumnya menjadi menggunakan AJAX.
+
+✅ AJAX GET
+✅ Ubahlah kode cards data product agar dapat mendukung AJAX GET.
+
+	Untuk mendapatkan objek-objek produk dari endpoint /json, pertama-tama saya menghapus `product_entries = Product.objects.filter(user=request.user)` dan `product_entries': product_entries`, di views.py karena kedua baris tersebut sudah redundant (tidak digunakan lagi). Selanjutnya saya memfilter penampilan pada show_json dan show_xml dengan menambahkan `data = Product.objects.filter(user=request.user)` di baris paling atas fungsi show_json dan show_xml. 
+	
+	Kemudian, pada main.html, saya menginisialisasi sebuah id baru dengan nama product_entry_cards, membuat fungsi baru didalam block script yang saya namakan `getProductEntries()`, dan menghapus block conditional di product_entries. 
+
+✅ Lakukan pengambilan data product menggunakan AJAX GET. Pastikan bahwa data
+yang diambil hanyalah data milik pengguna yang logged-in.
+
+Untuk memastikan data hanyalah milik pengguna, pada tugas sebelumnya sudah terdapat  `@login_required(login_url='/login')` yang memastikan kalau dia telah logged-in. Kemudian fungsi show_json yang sudah diubah akan mengembalikan data json milik pengguna yang login. AJAX GET request akan di handle oleh async function getProductEntries() di main.html. `Product.objects.filter(user=request.user)` dalam fungsi show_json memastikan bahwa setiap pengguna hanya dapat mengakses data produk mereka sendiri.
+
+✅ AJAX POST
+✅ Buatlah sebuah tombol yang membuka sebuah modal dengan form untuk 
+menambahkan product
+
+Di dalam main.html, saya menambahkan sebuah tombol yang akan membuka modal ketika diklik.
+Dengan menggunakan `onclick="showModal();"` built in javascript pada tombol akan memanggil showModal() yang dimana modal tersebut berisi form untuk menambahkan produk baru.
+Berikut kode implementasinya:
+```html
+<button
+  data-modal-target="crudModal"
+  data-modal-toggle="crudModal"
+  class="btn bg-[#7289da] hover:bg-[#5a6bbd] text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 mx-4"
+  onclick="showModal();"
+>
+  Add New Product Entry by AJAX
+</button>
+```
+
+✅ Buatlah fungsi view baru untuk menambahkan product baru ke dalam basis data.
+
+Saya membuat fungsi view baru di views.py bernama `add_product_entry_ajax`, namun sebelumnya saya mengimpor csrf_exempt dan require_POST karena csrf_exempt karena permintaan dilakukan via AJAX dan view hanya menerima permintaan POST. kedua import tersebut ditaruh diatas fungsi `add_product_entry_ajax` dengan `@csrf_exempt` dan `@require_POST`. Saya juga mengimport dan menngunakan strip_tags di dalam fungsi tersebut guna untuk mencegah serangan XSS.
+
+✅ Buatlah path /create-ajax/ yang mengarah ke fungsi view yang baru kamu buat.
+
+Saya menambahkan path baru berupa `path('create-ajax/', views.add_product_entry_ajax, name='add_product_entry_ajax'),` di urls.py. Tujuan saya membuat path ini agar request POST ditangani dan fungsi add_product_entry_ajax akan dipanggil.
+Berikut snippet implementasinya di kode saya:
+
+```python
+urlpatterns = [
+	# ... path lainnya
+	path('create-ajax/', views.add_product_entry_ajax, name='add_product_entry_ajax'),
+]
+```
+
+✅ Hubungkan form yang telah kamu buat di dalam modal kamu ke path /create-ajax/.
+
+Di main.html saya membuat function `addProductEntry` yang akan mengirimkan data form ke endpoint /create-ajax/ dengan memanfaatkan fetch dengan POST
+
+Berikut snippet kode yang menangani pengirima form dengan ajax
+```html
+function addProductEntry() {
+    fetch("{% url 'main:add_product_entry_ajax' %}", {
+      method: 'POST',
+      body: new FormData(document.querySelector('#productEntryForm')),
+    }).then((response) => refreshProductEntries());
+
+    document.getElementById('productEntryForm').reset();
+    document.querySelector("[data-modal-toggle='crudModal']").click();
+
+    return false;
+}
+```
+
+Jika proses berhasil, fungsi addProductEtry akan memanggil `refreshProductEntries()` untuk memperbarui daftar produk tanpa harus ngereload halaman
+
+bagian kode yang menangani request POST ke /create-ajax/ dan pemanggilan fungsi add_product_entry_ajax
+
+```html
+<form id="productEntryForm">
+  <div class="mb-4">
+      <label for="name" class="block text-sm font-medium" style="color: #ffffff;">Product Name</label>
+      <input type="text" id="nama" name="name" class="mt-1 block w-full rounded-md p-2" style="background-color: #2c2f33; color: #ffffff; border: 1px solid #7289da;" required />
+  </div>
+  <div class="mb-4">
+      <label for="price" class="block text-sm font-medium" style="color: #ffffff;">Price</label>
+      <input type="number" id="price" name="price" min="0" class="mt-1 block w-full rounded-md p-2" style="background-color: #2c2f33; color: #ffffff; border: 1px solid #7289da;" required />
+  </div>
+  <div class="mb-4">
+      <label for="description" class="block text-sm font-medium" style="color: #ffffff;">Description</label>
+      <textarea id="description" name="description" rows="3" class="mt-1 block w-full rounded-md p-2" style="background-color: #2c2f33; color: #ffffff; border: 1px solid #7289da;" required></textarea>
+  </div>
+</form>
+```
+
+✅ Lakukan refresh pada halaman utama secara asinkronus untuk menampilkan daftar product terbaru tanpa reload halaman utama secara keseluruhan
+
+Tanpa ngereload halaman, halamam utama akan direfresh karena saya mengimplementasikan fungsi  refreshProductEntries di main.html dengan memperbarui daftar produk menggunakan AJAX.
+Fungsi refreshProductEntries saya akan mengambil data produk terbaru menggunakawn getProductEtries() yg mengirimkan request ke AJAX GET di /json. refreshProdukEntries kemudian akan mengupdate elemen menjadi baru dengan ID product_entry_cards utk menampilkan daftar produk terbaru tanpa ngereload seluruh halaman.
+
+Berikut snippet kode saya:
+
+```html
+async function refreshProductEntries() {
+    document.getElementById("product_entry_cards").innerHTML = "";
+    document.getElementById("product_entry_cards").className = "";
+    const productEntries = await getProductEntries();
+    let htmlString = "";
+    let classNameString = "";
+
+    if (productEntries.length === 0) {
+        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+        htmlString = `
+            <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+                <p class="text-center text-gray-600 mt-4">Belum ada data product pada Etrean Luminant Store.</p>
+            </div>
+        `;
+    } else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+        productEntries.forEach((item) => {
+          const name = DOMPurify.sanitize(item.fields.name);
+          const price = DOMPurify.sanitize(item.fields.price);
+          const description = DOMPurify.sanitize(item.fields.description);
+
+          htmlString += `
+          <div class="relative break-inside-avoid">
+              <div class="relative top-5 bg-[#7289da] shadow-md rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-[#5a6bbd] transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                  <div class="bg-[#7289da] text-white p-4 rounded-t-lg border-b-2 border-[#5a6bbd]">
+                      <h3 class="font-bold text-xl mb-2">${name}</h3>
+                  </div>
+                  <div class="p-4">
+                      <p class="font-semibold text-lg mb-2 text-white">Product Description</p>
+                      <p class="text-white mb-2">${description}</p>
+                      <p class="font-semibold text-lg mb-2 text-white">Price</p>
+                      <p class="text-white mb-2">$${price}</p>
+                  </div>
+                  <div class="flex justify-end space-x-2 mt-4 p-4">
+                      <a href="/edit_product/${item.pk}" class="bg-[#424549] hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md">
+                          Edit
+                      </a>
+                      <a href="/delete_product/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md">
+                          Delete
+                      </a>
+                  </div>
+              </div>
+          </div>`;
+      });
+    }
+    document.getElementById("product_entry_cards").className = classNameString;
+    document.getElementById("product_entry_cards").innerHTML = htmlString;
+}
+```
+  </details>
