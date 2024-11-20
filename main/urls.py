@@ -2,12 +2,11 @@
 from django.urls import path
 from main.views import ingfo, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id
 from main.views import register, login_user, logout_user, edit_product, delete_product, add_product_entry_ajax
-
+from main.views import create_product_flutter
 
 app_name = 'main'
 
 urlpatterns = [
-    # bisa menambahkan URL utk views
     path('', ingfo, name='ingfo'),
     path('create-product', create_product, name='create_product'),
     path('xml/', show_xml, name='show_xml'),
@@ -20,4 +19,5 @@ urlpatterns = [
     path('edit_product/<uuid:id>', edit_product, name='edit_product'),
     path('delete_product/<uuid:id>', delete_product, name='delete_product'),
     path('create-ajax', add_product_entry_ajax, name='add_product_entry_ajax'),
+    path('create-flutter/', create_product_flutter, name='create_product_flutter'),
 ]
